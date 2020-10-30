@@ -1,0 +1,6 @@
+Software : LSL_Kinect,Version : 1.0.5.2,Stream nominal rate : 15,Sequence Name : Circular Steering Task
+
+TimeSpan,Marker Message
+2020-10-30 12:18:28.698,Start : Start recording
+2020-10-30 12:18:28.698,Message : The framerate has changed to 30
+2020-10-30 12:18:40.628,Stop : Stop recording
