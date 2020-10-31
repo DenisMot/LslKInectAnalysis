@@ -2,9 +2,12 @@
 %       -- XDF file : LSL.xdf
 %       -- CSV file : MoCap.csv
 
+%   Author(s):
+%       D. Mottet, 2019-12-15, Version 1
+
 clear all ; 
 close all ; 
-clc
+clc 
 
 % manually select a file 
 % [fileName, pathName] = uigetfile('../DAT/*.xdf', 'Navigate to the XDF file to open:'); 

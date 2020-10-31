@@ -1,7 +1,7 @@
 function CheckMocapStream(stream, tBeg, tEnd, option)
 % checks a "MocCap" stream built following LSL guidelines
 
-% %   Author(s):
+%   Author(s):
 %       D. Mottet, 2019-12-15, Version 1
 %
 %   Copyright 2019 - Univ Montpellier
