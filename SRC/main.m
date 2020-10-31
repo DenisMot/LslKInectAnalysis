@@ -27,6 +27,7 @@ disp(strcat( 'loading: ', fullFileNameCSV, '...'));
 M = importKinectCSV(fullFileNameCSV); 
 
 %CheckXDF(streams, 'noFigures'); 
+CheckLSLKinectSampling(streams); 
 
 searchedName = 'EuroMov-Mocap-Kinect'; 
 iStreamMocap = findStreamByName(streams, searchedName); 
