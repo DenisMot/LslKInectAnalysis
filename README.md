@@ -73,12 +73,34 @@ The option `'HandleJitterRemoval', true` in the reader function `load_xdf` makes
 
 ![](DOC/XDF_CSV_time_withoutJitter.svg)
 
+### Using `CheckLSLKinectSampling` to detect changes in Kinect sampling rate
+The matlab function `CheckLSLKinectSampling` checks wether the sampling rate of the Kinect changed during the record duration. If yes, it raises a warning and returns the series of timestamp and sampling rate.
 
+Do do so, `CheckLSLKinectSampling` :
+- reads the `Markers` stream from LSL-Kinect, seeking for messages about sampling rate changes.
+- decodes the messages to get, for each change in sampling rather
+  - the corresponding timestamp
+  - the corresponding new sampling rate
+- raises a warning if a (series of) change occured
+  - no warning is issued if the function call is made with a output argument. With a call such as `a = CheckLSLKinectSampling(streams);` the user is supposed to check if `a` is empty... or not, and proceed as necessary.
+- returns the information about the changes
+  - `newFrameRateTime` : timestamp of rate change
+  - `newFrameRateValue` : value of new rate (15 or 30)
+- This allows for code such as
+ ```matlab
+ [newFrameRateTime, newFrameRateValue ] = CheckLSLKinectSampling(streams);
+ if not(isempty(newFrameRateTime))
+   % proceed with the sampling changes
+ else
+   % proceed with no sampling changes
+ end
+ ```  
 ## Conclusions
 
-1°)  LSL-Kinect provides adequate time in CSV and XDF_CSV_time
+### LSL-Kinect provides time recorded by the Kinect computer
+  - Timestamp is available as the first variable in the CSV and XDF `MoCap` output.
+  - This `Timestamp` information is very important because the Kinect might change its sampling rate during a record.
 
-2°)  The option `'HandleJitterRemoval', true` should be used carefully... This option is valid if the Kinect does not switch from 30 Hz to 15 Hz (due to changes in lighting).
-The option `'HandleJitterRemoval', true` might be used if **changes in sample rate are checked in the Marker stream**.
-
-The function `CheckLSLKinectSampling` checks wether the sampling rate of the Kinect changed and raises a warning if this is the case. `CheckLSLKinectSampling` reads the `Markers` stream of LSL-Kinect seeking for messages about sampling rate changes.
+### Reading an XDF file containing Kinect data imposes to check for changes in sampling rate
+Because the Kinect can either record at 15 or 30 Hz, when reading an XDF file the option `'HandleJitterRemoval', true` should be used carefully.
+  - The option `'HandleJitterRemoval', true` might be used **IF AND ONLY IF** changes in sample rate are checked in the `Markers` stream.
