@@ -26,6 +26,9 @@ streams = load_xdf(fullFileNameXDF, 'HandleJitterRemoval', true);
 disp(strcat( 'loading: ', fullFileNameCSV, '...'));
 M = importKinectCSV(fullFileNameCSV); 
 
+% does the same. but 3 times slower... strange... 
+% M = csvread(fullFileNameCSV,3,0); % CAUTION 0 based index!!
+
 %CheckXDF(streams, 'noFigures'); 
 CheckLSLKinectSampling(streams); 
 
