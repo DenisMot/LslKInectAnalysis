@@ -1,5 +1,10 @@
 # LslKInectAnalysis
 
+## Usage
+Clone or download the repository
+ add the `load_xdf` function into yo
+
+
 
 The goal is to check time consistency in files provided by LSL-Kinect
 
@@ -9,7 +14,8 @@ The goal is to check time consistency in files provided by LSL-Kinect
 - `MoCap.csv`: identical to the 'MoCap' stream in the XDF
 
 ## Reading files  
-- `LSL.xdf`: loaded by the LSL provided function `load_xdf` with option `'HandleJitterRemoval', false`. The latter is mandatory to get the RAW timestamps.
+- `LSL.xdf`: loaded by the LSL provided function `load_xdf` (see https://github.com/sccn/xdf/).
+  - IMPORTANT : I use the option `'HandleJitterRemoval', false`. The latter is mandatory to get the RAW timestamps.
 - `Markers.csv`: not loaded
 - `MoCap.csv`: loaded by `importKinectCSV`, a matlab generated function (`uiopen` allows to built this function for you)
 
@@ -62,5 +68,7 @@ The option `'HandleJitterRemoval', true` in the reader `load_xdf` makes importan
 
 1°)  LSL-Kinect provides adequate time in CSV and XDF_CSV_time
 
-2°)  The option `'HandleJitterRemoval', true` should be used carefully 
-If the Kinect does not switch from 30 Hz to 15 Hz (due to changes in lighting) the `'HandleJitterRemoval', true` might be used if **changes in sample rate are checked in the Marker stream**.
+2°)  The option `'HandleJitterRemoval', true` should be used carefully... This option is valid if the Kinect does not switch from 30 Hz to 15 Hz (due to changes in lighting).
+The option `'HandleJitterRemoval', true` might be used if **changes in sample rate are checked in the Marker stream**.
+
+The function `CheckLSLKinectSampling` checks wether the sampling rate of the Kinect changed and raises a warning if this is the case. `CheckLSLKinectSampling` reads the `Markers` stream of LSL-Kinect seeking for messages about sampling rate changes.
