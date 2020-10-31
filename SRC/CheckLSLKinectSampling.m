@@ -1,4 +1,4 @@
-function CheckLSLKinectSampling(streams)
+function [newFrameRateTime, newFrameRateValue] = CheckLSLKinectSampling(streams)
 % check if the sampling frequency changed during the record and informs the
 % user 
 
@@ -14,6 +14,14 @@ if isempty(iStreamMarkers)
     disp('Cannot find a stream named ''EuroMov-Markers-Kinect'' ') ;
     return
 end
+
+% argument check 
+% if no argout : provide information in the console 
+% if argout : no console output (user check for empty newFrameRateTime) 
+flagDisplayWarning = false; 
+if nargout < 1 
+    flagDisplayWarning = true; 
+end 
 
 markersMessage = streams{1, iStreamMarkers}.time_series';
 markersTime    = streams{1, iStreamMarkers}.time_stamps';
@@ -49,13 +57,15 @@ for i=1:nFrameRateChange
     end
 end
 
-% end user message 
-if nProblems > 0
-    advice  = 'You should NOT use read_xdf with HandleJitterRemoval = true!';
-    message = sprintf('\n%s\n%s\n', message, advice);
-    warning(message)
-else
-    disp('No frame rate changes')
+% end user message
+if flagDisplayWarning
+    if nProblems > 0
+        advice  = 'You should NOT use read_xdf with HandleJitterRemoval = true!';
+        message = sprintf('\n%s\n%s\n', message, advice);
+        warning(message)
+    else
+        disp('No frame rate changes')
+    end
 end
 
 end
