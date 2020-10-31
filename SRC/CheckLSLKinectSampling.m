@@ -9,6 +9,7 @@ function CheckLSLKinectSampling(streams)
 % lookfor the marker stream
 iStreamMarkers = findStreamByName(streams, 'EuroMov-Markers-Kinect');
 
+% error check (minimal) 
 if isempty(iStreamMarkers) 
     disp('Cannot find a stream named ''EuroMov-Markers-Kinect'' ') ;
     return
