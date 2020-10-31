@@ -18,7 +18,7 @@ disp(strcat( 'loading: ', fullFileNameXDF, '...'));
 
 % load the file (this might take sometimes if big xdf and no mex file) 
 % 'HandleJitterRemoval', true ==> **** not the RAW DATA *****
-streams = load_xdf(fullFileNameXDF, 'HandleJitterRemoval', false);
+streams = load_xdf(fullFileNameXDF, 'HandleJitterRemoval', true);
 
 disp(strcat( 'loading: ', fullFileNameCSV, '...'));
 M = importKinectCSV(fullFileNameCSV); 
@@ -28,12 +28,25 @@ M = importKinectCSV(fullFileNameCSV);
 searchedName = 'EuroMov-Mocap-Kinect'; 
 iStreamMocap = findStreamByName(streams, searchedName); 
 
+% do not forget that XDF stores data on LINES (not columns)
 TimeXDF = streams{1, iStreamMocap}.time_stamps'; 
 TimeXDFdata = streams{1, iStreamMocap}.time_series(1,:)'; 
+% CSV is column oriented (classical). 
 TimeCSV = M(:,1); 
 
-TimeCSV     = TimeCSV     ./ 1000; % to get seconds 
-TimeXDFdata = TimeXDFdata ./ 1000; % to get seconds 
+% units of time should be the same ! 
+timeUnit = 'ms'
+switch timeUnit
+    case 's'
+        TimeXDF     = TimeXDF;
+        TimeCSV     = TimeCSV     ./ 1000; % to get seconds
+        TimeXDFdata = TimeXDFdata ./ 1000; % to get seconds
+    case 'ms'
+        TimeXDF     = TimeXDF .* 1000 ;
+        TimeCSV     = TimeCSV;
+        TimeXDFdata = TimeXDFdata;
+end
+
 
 figure(200); clf;
 subplot(2,1,1) 
@@ -41,10 +54,10 @@ plot(TimeCSV - TimeXDFdata)
 title('TimeCSV - TimeXDFdata (should be equal)')
 subplot(2,1,2) 
 delay = (TimeCSV-TimeCSV(1)) - (TimeXDF-TimeXDF(1)); 
-delay = delay * 1000; % ms 
-plot(delay) 
+plot(delay, '*') 
 title('TimeCSV - TimeXDF (jitter in network tranmission)')
-ylabel('delay (milisecond)')
+ylabel(sprintf('delay (%s)', timeUnit) )
+xlabel('sample number')
 
 % display the head of the datasets for visual comparison 
 format longG
@@ -62,10 +75,16 @@ figure (1); clf;
 plot(diff(TimeXDF)) 
 hold on 
 plot(diff(TimeCSV), '*') 
-legend('deltaTimeXDF', 'deltaTimeStampCSV')
+plot(0)
+legend('diff(TimeXDF)', 'diff(TimeCSV)')
 
 xlabel('sample number')
-ylabel('sampling period (sec)')
-title('Comparison of XDF timestamps and CSV time')
+ylabel(sprintf('sampling period (%s)', timeUnit) )
+title('Comparison of XDF and CSV sampling period')
 
+figure (3); clf; 
 
+histogram(diff(TimeCSV))
+xlabel(sprintf('sampling period (%s)', timeUnit) )
+ylabel('count')
+title('distribution of diff(TimeCSV)') 
