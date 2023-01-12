@@ -5,7 +5,7 @@ Clone or download the repository.
 Run `main` within matlab.
 
 ## Goal
-The general goal is to check time consistency in files provided by [LSL-Kinect](https://github.com/Benoit-Prigent/LSL-Kinect).
+The general goal is to check time consistency in files provided by [LSL-Kinect](https://github.com/KarimaBak/LSL-KinectV2).
 
 ## Input data
 - `LSL.xdf`: all in one XDF file.
@@ -25,7 +25,7 @@ The general goal is to check time consistency in files provided by [LSL-Kinect](
 
 ## Reading files  
 - `LSL.xdf`: loaded by the LSL provided function `load_xdf` (for the last version, see https://github.com/sccn/xdf/. A copy of `load_xdf` is provided in this repository for convenience).
-  - IMPORTANT : I use the option `'HandleJitterRemoval', false`. The latter is mandatory to get the RAW timestamps.
+  - IMPORTANT : I use the option `'HandleJitterRemoval', false`, which is mandatory to get the RAW timestamps.
 - `Markers.csv`: not loaded
 - `MoCap.csv`: loaded by `importKinectCSV`, a matlab generated function (`uiopen` allows to built this function for you after visual check : handy!). Alternatively, you can use `csvread` to do the same, but it is 3 times slower.  
 
